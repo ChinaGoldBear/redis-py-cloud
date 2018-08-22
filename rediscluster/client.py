@@ -36,9 +36,10 @@ from redis.client import list_or_args, parse_info
 from redis.connection import Token
 from redis._compat import iteritems, basestring, b, izip, nativestr, long
 from redis.exceptions import RedisError, ResponseError, TimeoutError, DataError, ConnectionError, BusyLoadingError
+from .stream import RedisStream
 
 
-class StrictRedisCluster(StrictRedis):
+class StrictRedisCluster(StrictRedis, RedisStream):
     """
     If a command is implemented over the one in StrictRedis then it requires some changes compared to
     the regular implementation of the method.
@@ -129,8 +130,10 @@ class StrictRedisCluster(StrictRedis):
         'READWRITE': bool_ok,
     }
 
-    def __init__(self, host=None, port=None, startup_nodes=None, max_connections=None, max_connections_per_node=False, init_slot_cache=True,
-                 readonly_mode=False, reinitialize_steps=None, skip_full_coverage_check=False, nodemanager_follow_cluster=False,
+    def __init__(self, host=None, port=None, startup_nodes=None, max_connections=None, max_connections_per_node=False,
+                 init_slot_cache=True,
+                 readonly_mode=False, reinitialize_steps=None, skip_full_coverage_check=False,
+                 nodemanager_follow_cluster=False,
                  connection_class=None, **kwargs):
         """
         :startup_nodes:
@@ -224,13 +227,15 @@ class StrictRedisCluster(StrictRedis):
         else:
             connection_pool_cls = ClusterConnectionPool
 
-        connection_pool = connection_pool_cls.from_url(url, db=db, skip_full_coverage_check=skip_full_coverage_check, **kwargs)
+        connection_pool = connection_pool_cls.from_url(url, db=db, skip_full_coverage_check=skip_full_coverage_check,
+                                                       **kwargs)
         return cls(connection_pool=connection_pool, skip_full_coverage_check=skip_full_coverage_check)
 
     def __repr__(self):
         """
         """
-        servers = list({'{0}:{1}'.format(nativestr(info['host']), info['port']) for info in self.connection_pool.nodes.startup_nodes})
+        servers = list({'{0}:{1}'.format(nativestr(info['host']), info['port']) for info in
+                        self.connection_pool.nodes.startup_nodes})
         servers.sort()
         return "{0}<{1}>".format(type(self).__name__, ', '.join(servers))
 
@@ -392,6 +397,7 @@ class StrictRedisCluster(StrictRedis):
 
                 node = self.connection_pool.nodes.set_node(e.host, e.port, server_type='master')
                 self.connection_pool.nodes.slots[e.slot_id][0] = node
+                slot = e.slot_id if e.slot_id != slot else slot
             except TryAgainError as e:
                 if ttl < self.RedisClusterRequestTTL / 2:
                     time.sleep(0.05)
@@ -883,7 +889,7 @@ class StrictRedisCluster(StrictRedis):
             options work on multiple keys that can exist on multiple servers.
         """
         if (start is None and num is not None) or \
-           (start is not None and num is None):
+                (start is not None and num is None):
             raise RedisError("RedisError: ``start`` and ``num`` must both be specified")
         try:
             data_type = b(self.type(name))
@@ -998,6 +1004,7 @@ class StrictRedisCluster(StrictRedis):
                     return float(v)
             else:
                 return self.get(key)
+
         data.sort(key=_by_key)
 
     ###
