@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-
+'''
+power by ZHGoldBear
+'''
 class RedisStream(object):
     def xadd(self, key, id, maxlen=0, *field):
         pieces = [key]
