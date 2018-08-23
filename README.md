@@ -1,24 +1,19 @@
-# redis-py-cluster
+# redis-py-cloud
 
-This client provides a client for redis cluster that was added in redis 3.0.
+This client provides a client for redis cluster that was added in Redis 5.0+. Support for stream data types.
 
-This project is a port of `redis-rb-cluster` by antirez, with alot of added functionality. The original source can be found at https://github.com/antirez/redis-rb-cluster
-
-Gitter chat room: [![Gitter](https://badges.gitter.im/Grokzen/redis-py-cluster.svg)](https://gitter.im/Grokzen/redis-py-cluster?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-
-[![Build Status](https://travis-ci.org/Grokzen/redis-py-cluster.svg?branch=master)](https://travis-ci.org/Grokzen/redis-py-cluster) [![Coverage Status](https://coveralls.io/repos/Grokzen/redis-py-cluster/badge.png)](https://coveralls.io/r/Grokzen/redis-py-cluster) [![PyPI version](https://badge.fury.io/py/redis-py-cluster.svg)](http://badge.fury.io/py/redis-py-cluster)
+This project is a port of `redis-py-cluster` by Johan Andersson, with alot of added functionality. The original source can be found at https://github.com/Grokzen/redis-py-cluster
 
 
+# Documentation (NEWS)
 
-# Documentation
+Support for Stream of Redis5.0 new data types.
 
-All documentation can be found at http://redis-py-cluster.readthedocs.org/en/master
+commend: xadd, xread, xreadgroup, xack, xack, xlen, xrange
 
-This Readme contains a reduced version of the full documentation.
+All documentation (redis-py-cluster) can be found at http://redis-py-cluster.readthedocs.org/en/master
 
-Upgrading instructions between each released version can be found [here](docs/upgrading.rst)
-
-Changelog for next release and all older releasess can be found [here](docs/release-notes.rst)
+The redis-py-cloud documentation can be found at https://blog.csdn.net/copyangle/article/details/81975975
 
 
 
@@ -48,13 +43,24 @@ Small sample script that shows how to get started with RedisCluster. It can also
 True
 >>> print(rc.get("foo"))
 'bar'
+
+>>> rc.xadd("mystream", "*", 100,{"name": "data"})
+
+>>> rc.xread("mystream","*",1，0)
+
+>>> rc.xrange("mystream","-","+")
+
+>>> rc.xreadgroup("group_name","consumer_name","mystream",">",0)
+
+>>> rc.xack("mystream","counsumer_name","1527849629172-0")
+
 ```
 
 
 
 ## License & Authors
 
-Copyright (c) 2013-2018 Johan Andersson
+Copyright (c) 2018 Max Hua
 
 MIT (See docs/License.txt file)
 
