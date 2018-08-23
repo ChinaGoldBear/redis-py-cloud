@@ -20,7 +20,7 @@ with open(os.path.join('docs', 'release-notes.rst')) as f:
 
 setup(
     name="redis-py-cloud",
-    version="1.3.7",
+    version="1.3.8",
     description="Cluster library for redis 5.0.0 built on top of redis-py lib",
     long_description=readme + '\n\n' + history,
     author="Max Hua",
