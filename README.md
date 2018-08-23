@@ -20,6 +20,11 @@ The redis-py-cloud documentation can be found at https://blog.csdn.net/copyangle
 ## Installation
 
 ```
+$ pip install redis-py-cloud
+```
+
+```
+$ git clone git@github.com:ChinaGoldBear/redis-py-cloud.git
 $ python setup.py install
 ```
 
