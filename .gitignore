@@ -14,3 +14,4 @@ build
 docs/_build
 docs/_build_html
 ./idea
+.pypirc
