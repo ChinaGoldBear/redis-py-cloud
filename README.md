@@ -19,10 +19,8 @@ The redis-py-cloud documentation can be found at https://blog.csdn.net/copyangle
 
 ## Installation
 
-Latest stable release from pypi
-
 ```
-$ pip install redis-py-cluster
+$ python setup.py install
 ```
 
 
