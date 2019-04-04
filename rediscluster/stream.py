@@ -130,5 +130,5 @@ class RedisStream(object):
         :param commend: default
         :return:
         '''
-        pieces = ["XGROUP", commend, streams, consumer, startpoint]
-        return self.execute_command('XREADGROUP', *pieces)
+        pieces = [commend, streams, consumer, startpoint]
+        return self.execute_command('XGROUP', *pieces)
