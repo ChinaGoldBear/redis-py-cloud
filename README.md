@@ -57,6 +57,10 @@ True
 
 >>> rc.xack("mystream","counsumer_name","1527849629172-0")
 
+>>> rc.xgroup("mystream","counsumer_group1","$")
+
+>>> rc.xgroup("mystream","counsumer_group2","0-0")
+
 ```
 
 
